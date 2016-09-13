@@ -9,63 +9,109 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jdk.nashorn.internal.ir.BreakNode;
 
 /**
  *
  * @author DONTKNOW
  */
-public class principal extends javax.swing.JFrame {
+public class notifykjovas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form principal
-     */
-    Properties props = new Properties();
-    public principal(String title, String Info) {
+    public int GetPross(){
+        int numJovasNoty =0 ;
+          try {
+            File file = new File("pross_abertos");
+            if (!file.exists()) {
+                file.createNewFile();
+                 numJovasNoty = 0;
+                 FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(String.valueOf(numJovasNoty));
+                bw.close();
+            }else{
+                FileReader fr = new FileReader(file.getAbsoluteFile());
+                BufferedReader br = new BufferedReader(fr);
+                numJovasNoty = Integer.parseInt(br.readLine());
+            }
+
+        } catch (IOException e) {
+        }
+
+        return numJovasNoty;
+    }
+    public void setMorePross(){
+           int numJovasNoty =0 ;
+             try {
+            File file = new File("pross_abertos");
+            if (!file.exists()) {
+                file.createNewFile();
+                 numJovasNoty = 0;
+            }else{
+                FileReader fr = new FileReader(file.getAbsoluteFile());
+                BufferedReader br = new BufferedReader(fr);
+                numJovasNoty = Integer.parseInt(br.readLine());
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(String.valueOf(numJovasNoty + 1));
+            bw.close();
+
+        } catch (IOException e) {
+        }
+    
+    }
+    public void setLessPross(){
+          int numJovasNoty =0 ;
+             try {
+            File file = new File("pross_abertos");
+            if (!file.exists()) {
+                file.createNewFile();
+                 numJovasNoty = 0;
+            }else{
+                FileReader fr = new FileReader(file.getAbsoluteFile());
+                BufferedReader br = new BufferedReader(fr);
+                numJovasNoty = Integer.parseInt(br.readLine());
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            if(numJovasNoty > 0){
+                bw.write(String.valueOf(numJovasNoty - 1));
+            }
+            bw.close();
+
+        } catch (IOException e) {
+        }
+    }
+    
+    
+    public notifykjovas(String title, String Info) {
         initComponents();
-        //set property
-        
-        try {
-            FileInputStream file = new FileInputStream("propiedade.properties");
-            props.load(file);
-        } catch (FileNotFoundException ex) {
-           
-        } catch (IOException ex) {
-        }
-       
-        //System.getProperties().setProperty(Info, title);
-        if (props.getProperty("JovasNoty") == null){
-            System.getProperties().setProperty("JovasNoty", "0");
-        }
-        int numJovasNoty = Integer.parseInt(props.getProperty("JovasNoty"));
-                
+
+        int numJovasNoty = GetPross();
+
+      
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int locX = (int) screenSize.getWidth()-this.getWidth();
-        int locY = (int) screenSize.getHeight()- this.getHeight() - numJovasNoty*this.getHeight();
-        
+        int locX = (int) screenSize.getWidth() - this.getWidth();
+        int locY = (int) screenSize.getHeight() - this.getHeight() - numJovasNoty * this.getHeight();
+
         //evita a barra do explore;
         locY -= 30;
         locX -= 5;
-        
+
         this.setLocation(locX, locY);
         this.jLabel1.setText(title);
         this.jTextArea2.setText(Info);
-        numJovasNoty++;
-        props.setProperty("JovasNoty",String.valueOf(numJovasNoty));
-        try { 
-            props.store(new FileOutputStream("propiedade.properties"), null);
-        } catch (IOException ex) {
-            
-        }
+        setMorePross();
         
+
     }
 
     /**
@@ -160,7 +206,7 @@ public class principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextArea2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea2MouseClicked
-       Closeform();
+        Closeform();
     }//GEN-LAST:event_jTextArea2MouseClicked
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
@@ -168,132 +214,89 @@ public class principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-       Closeform();
+        Closeform();
     }//GEN-LAST:event_formMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-      Showform();
-      vibrateForm();
+        Showform();
+        vibrateForm();
     }//GEN-LAST:event_formWindowOpened
-    void vibrateForm(){
-    Runnable r = new Runnable() {
+    void vibrateForm() {
+        Runnable r = new Runnable() {
             int i = 0;
+
             @Override
             public void run() {
                 Random r = new Random();
                 Point loc = getLocation();
-               while(i < 100 ){
-                
-                i+=1;
-                   setLocation(loc.getLocation().x+r.nextInt(5) -r.nextInt(5) ,loc.getLocation().y+r.nextInt(5) -r.nextInt(5));
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ex) {
+                while (i < 100) {
+
+                    i += 1;
+                    setLocation(loc.getLocation().x + r.nextInt(5) - r.nextInt(5), loc.getLocation().y + r.nextInt(5) - r.nextInt(5));
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                    }
                 }
-               }
                 setLocation(loc);
-               
-               
+
             }
         };
         Thread t = new Thread(r);
         t.start();
     }
-    void Closeform(){
+
+    void Closeform() {
         Runnable r = new Runnable() {
             float i = 1.0f;
+
             @Override
             public void run() {
-               jPanel2.setBackground(Color.red);
-               while(i > 0.1f){
-                setOpacity(i);
-                i-=0.02f;
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ex) {
+                jPanel2.setBackground(Color.red);
+                while (i > 0.1f) {
+                    setOpacity(i);
+                    i -= 0.02f;
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                    }
                 }
-               }
-               System.exit(0);
-               
+                System.exit(0);
+
             }
         };
         Thread t = new Thread(r);
         t.start();
-        int num =Integer.parseInt(props.getProperty("JovasNoty"));
-        num--;
-         props.setProperty("JovasNoty",String.valueOf(num));
-        try { 
-            props.store(new FileOutputStream("propiedade.properties"), null);
-        } catch (IOException ex) {
-            
-        }
-         
+       
+       setLessPross();
+       
+
     }
-        void Showform(){
+
+    void Showform() {
+        this.setVisible(true);
         Runnable r = new Runnable() {
             float i = 0.0f;
+
             @Override
             public void run() {
-               
-               while(i < 1.0f){
-                setOpacity(i);
-                i+=0.02f;
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ex) {
+
+                while (i < 1.0f) {
+                    setOpacity(i);
+                    i += 0.02f;
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                    }
                 }
-               }
-               
+
             }
         };
         Thread t = new Thread(r);
         t.start();
-        
-         
+
     }
-    /**
-     * @param args the command line arguments
-     */
-    static String title = "Information";
-    static String info = "message here";
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        
-        
-        if(args.length > 1){
-            title = args[0];
-            info = args[1];
-            
-        }
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new principal(title,info).setVisible(true);
-            }
-        });
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
